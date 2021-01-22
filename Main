@@ -1,0 +1,88 @@
+
+
+from tkinter import *
+master=Tk()
+def showc():
+    print(v.get())
+
+on={}
+
+def PokeShow():
+    for label in master.grid_slaves():
+        if int(label.grid_info()["column"])>=2:
+            label.grid_forget()
+    out=[on[i].get() for i in on if on[i].get()!='']
+    if len(out)>2:
+        Label(master,text='Max 2!').grid(column=2,row=0)
+        return
+        
+    Pushlist(out,GetStrong,"Strong Against:",2)
+    Pushlist(out,GetWeak,"Weak Against:",3)
+    Pushlist(out,GetRes,"Resistant to:",4)
+    Pushlist(out,GetVul,"Vulnerable to:",5)
+    
+def Pushlist(lst,func,Title,col):
+    textout=func(lst)
+    Label(master,text=Title).grid(column=col,row=0)
+    j=2
+    for i in textout:
+        Label(master,text=i).grid(column=col,row=j)
+        j+=1
+    
+def GetStrong(lst):
+    Strongout=[Strong_Against[i] for i in lst]
+    if len(Strongout)==2:
+        textout=list(set(Strongout[0])|set(Strongout[1]))
+    else:
+        textout=Strongout[0]
+    return textout
+
+
+def GetWeak(lst):
+    Weakout=[Weak_Against[i] for i in lst]
+    if len(Weakout)==2:
+        textout=list(set(Weakout[0])|set(Weakout[1]))
+    else:
+        textout=Weakout[0]
+    return textout
+
+def GetRes(lst):
+    Resout=[Resistant_To[i] for i in lst]
+    if len(Resout)==2:
+        textout=list(set(Resout[0])|set(Resout[1]))
+    else:
+        textout=Resout[0]
+    return textout
+
+def GetVul(lst):
+    Vulout=[Vulnerable_To[i] for i in lst]
+    if len(Vulout)==2:
+        textout=list(set(Vulout[0])|set(Vulout[1]))
+    else:
+        textout=Vulout[0]
+    return textout   
+
+def clear():
+    for i in on:
+        on[i].set('')
+    for label in master.grid_slaves():
+        if int(label.grid_info()["column"])>=2:
+            label.grid_forget()
+    
+for i in Strong_Against:
+    var=StringVar()
+    button_widget=Checkbutton(master,
+                              text=i,
+                              variable=var,
+                              offvalue='',
+                              onvalue=i,
+                              indicatoron=False,
+                              ).grid()
+    on[i]=var
+    
+    
+    
+
+Button(master,text='Reset',command=clear).grid(column=1,row=1)
+Button(master,text='Info',command=PokeShow).grid(column=1,row=0)
+mainloop()
